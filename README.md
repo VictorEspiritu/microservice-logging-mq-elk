@@ -15,3 +15,8 @@ exchange: exc_logstash --> queue_logstash (queue_logstash)
 $ docker run -d -it --name storage-es -p 9200:9200 -p 9300:9300 elasticsearch
 $ docker run -d -it --name console-kibana --link storage-es:elasticsearch -p 5601:5601 kibana
 $ docker run -d -it --name logstash logstash -e 'input { rabbitmq { host => "192.168.99.100" port => 30000 durable => true } } output { elasticsearch { hosts => ["192.168.99.100"] } }'
+$ docker run -d -it --name logstash logstash -e 'input { rabbitmq { host => "192.168.99.100" port => 30000 durable => true } } output { elasticsearch { hosts => ["192.168.99.100"] } }'
+$ docker run -d -it --name logstash logstash -e 'input { rabbitmq { host => "192.168.99.100" port => 30000 exchange => "exc_logstash" durable => true } } output { stdout { codec => rubydebug } }'
+$ docker run -d -it --name logstash logstash -e 'input { rabbitmq { host => "192.168.99.100" port => 30000 queue => "queue_logstash" durable => true } } output { stdout { codec => rubydebug } }'
+$ docker run -d -it --name logstash logstash -e 'input { rabbitmq { host => "192.168.99.100" port => 30000 queue => "queue_logstash" durable => true } } output { elasticsearch { hosts => ["192.168.99.100"] } }'
+
